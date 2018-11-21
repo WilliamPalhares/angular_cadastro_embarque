@@ -1,0 +1,136 @@
+<!-- Container -->
+<div class="row row-content minhas-lista">
+    <!-- Filtros -->
+    <div class="col-sm-12 col-md-3 p-0">
+        <div class="sidebar-nav">
+            <h3>Filtros</h3>
+            <div class="form-group">
+                <label for="nome">Data de embarque >=</label>
+                <input type="text" [(ngModel)]="dataEmbarque" placeholder="Data de embarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nome">Data de desembarque >=</label>
+                <input type="text" [(ngModel)]="dataDesembarque" placeholder="Data de desembarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista e Cadastro -->
+    <div class="col-sm-12 offset-md-1 col-md-7">
+        <h2>Quantidade de Funcionários cadastrados - {{ list.length }}</h2>
+        <h2 class="float-left">Funcionários</h2>
+        <div class="dropdown float-right">
+            <button class="btn btn-primary btn-nova-solicitacao"
+            (click)="openModalCadastro(modelCadastro)"
+            type="button">
+                Novo Cadastro
+            </button>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Empresa</th>
+                        <th>Função</th>
+                        <th>Embarque</th>
+                        <th>Desembarque </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of list | filter : dataEmbarque, dataDesembarque">    
+                        <td>{{ item.Id }}</td>
+                        <td>{{ item.Nome }}</td>
+                        <td>{{ item.Empresa }}</td>
+                        <td>{{ item.Funcao }}</td>
+                        <td>{{ (item.DataHoraEmbarque | formatDate) }}</td>
+                        <td>{{ (item.DataHoraDesembarque | formatDate) }}</td>
+
+                        <td>
+                            <div class="btn-group" dropdown>
+                                <button id="button-basic" 
+                                        dropdownToggle type="button" 
+                                        class="btn btn-primary dropdown-toggle"
+                                        aria-controls="dropdown-basic">
+                                    Opções <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                                    role="menu" aria-labelledby="button-basic">
+                                    <li role="menuitem"><a class="dropdown-item" (click)="openModalCadastro(modelCadastro, item)">Editar</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="openModalEmbarque(modelEmbarque, item)">Embarque</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<ng-template #modelCadastro>
+    <form>
+        <div class="modal-header">
+            <h4 class="modal-title pull-left">{{ TitleModal }}</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label class="control-label">Nome Completo:</label>
+                    <input type="hidden" [(ngModel)]="funcionario.Id" [ngModelOptions]="{standalone: true}"/>
+                    <input type="text" class="form-control" placeholder="Nome Completo" title="Nome Completo" name="nome" [(ngModel)]="funcionario.Nome" [ngModelOptions]="{standalone: true}"/>
+                    
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label">Nome Empresa:</label>
+                    <input type="text" class="form-control" placeholder="Nome Empresa" title="Nome Empresa" name="empresa" [(ngModel)]="funcionario.Empresa" [ngModelOptions]="{standalone: true}"/>
+                    
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label">Função:</label>
+                    <input type="text" class="form-control" placeholder="Função" title="Função" name="funcao" [(ngModel)]="funcionario.Funcao" [ngModelOptions]="{standalone: true}"/>
+                  
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancelar</button>
+            <button type="button" class="btn btn-success" (click)="add()">Cadastrar</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #modelEmbarque>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{ TitleModal }}</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Data de Embarque:</label>
+                    <input type="hidden" [(ngModel)]="funcionario.Id" [ngModelOptions]="{standalone: true}"/>
+                    <input type="text" [(ngModel)]="funcionario.DataHoraEmbarque" [ngModelOptions]="{standalone: true}" placeholder="Data de Embarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Data de Desembarque:</label>
+                    <input type="text" [(ngModel)]="funcionario.DataHoraDesembarque" [ngModelOptions]="{standalone: true}" placeholder="Data de Desembarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modalRef.hide()">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="addEmbarque()">Cadastrar</button>
+    </div>
+</ng-template>
