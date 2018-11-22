@@ -9,10 +9,10 @@
                 <input type="text" [(ngModel)]="dataEmbarque" placeholder="Data de embarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
             </div>
 
-            <div class="form-group">
-                <label for="nome">Data de desembarque >=</label>
+            <!--<div class="form-group">
+                <label for="nome">Data de desembarque <=</label>
                 <input type="text" [(ngModel)]="dataDesembarque" placeholder="Data de desembarque" class="form-control" bsDatepicker [bsConfig]="bsConfig" required>
-            </div>
+            </div>-->
         </div>
     </div>
 
@@ -41,7 +41,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of list | filter : dataEmbarque, dataDesembarque">    
+                    <tr *ngFor="let item of list | filter : dataEmbarque">    
                         <td>{{ item.Id }}</td>
                         <td>{{ item.Nome }}</td>
                         <td>{{ item.Empresa }}</td>
@@ -61,6 +61,7 @@
                                     role="menu" aria-labelledby="button-basic">
                                     <li role="menuitem"><a class="dropdown-item" (click)="openModalCadastro(modelCadastro, item)">Editar</a></li>
                                     <li role="menuitem"><a class="dropdown-item" (click)="openModalEmbarque(modelEmbarque, item)">Embarque</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="onItemDeleted(item.Id)">Remove</a></li>
                                 </ul>
                             </div>
                         </td>

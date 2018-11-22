@@ -47,19 +47,26 @@ export class EmbarqueListComponent {
       return false;
     }
 
-    var t = this.list.find(temp => temp.Nome.toUpperCase().trim() == this.funcionario.Nome.toUpperCase().trim()
+    if (typeof this.funcionario.Id === "undefined") {
+      var t = this.list.find(temp => temp.Nome.toUpperCase().trim() == this.funcionario.Nome.toUpperCase().trim()
                                 && temp.Empresa.toUpperCase().trim() == this.funcionario.Empresa.toUpperCase().trim()
                                 && temp.Funcao.toUpperCase().trim() == this.funcionario.Funcao.toUpperCase().trim());
     
-    if (t != null) {
-      alert("Usuário já cadastrado.");
-      return false;  
+      if (t != null) {
+        alert("Usuário já cadastrado.");
+        return false;  
+      }
+      
+      func = Object.assign({}, this.funcionario);
+      func.Id = this.list.length + 1;
+      this.list.push(func);
     }
-    
-    func = Object.assign({}, this.funcionario);
-    func.Id = this.list.length + 1;
-    this.list.push(func);
+
     this.modalRef.hide();
+  }
+
+  onItemDeleted(index: number){
+    this.list = this.list.splice(index, 1);
   }
 
   addEmbarque() {
@@ -69,11 +76,13 @@ export class EmbarqueListComponent {
   openModalCadastro(modelCadastro: TemplateRef<any>, funcionario: Funcionario) {
     this.TitleModal = "Novo Cadastro";
 
-    if (funcionario == null) {
-      this.TitleModal = "Editar Cadastro";
-      this.funcionario.Id = 0;
+    if (typeof funcionario === "undefined") {
+      this.funcionario = new Funcionario();
+      this.funcionario.DataHoraEmbarque = "";
+      this.funcionario.DataHoraDesembarque = "";
     }
     else {
+      this.TitleModal = "Editar Cadastro";
       this.funcionario = funcionario;
     }
 
